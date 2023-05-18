@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react"
-import { useHistory } from "react-router"
+import { useState, useEffect, useContext } from "react"
+// import { useHistory } from "react-router"
+import { CurrentUser } from '../contexts/CurrentUser'
 
 function NewCommentForm({ place, onSubmit }) {
+    const { currentUser } = useContext(CurrentUser)
 
     const [authors, setAuthors] = useState([])
 
@@ -14,7 +16,7 @@ function NewCommentForm({ place, onSubmit }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`http://localhost:5000/users`)
+            const response = await fetch(`http://localhost:5001/users`)
             const users = await response.json()
             setComment({ ...comment, authorId: users[0]?.userId})
             setAuthors(users)
@@ -35,6 +37,10 @@ function NewCommentForm({ place, onSubmit }) {
             rant: false,
             authorId: authors[0]?.userId
         })
+    }
+    // This line of code allows to hide the form when a user isn't logged in
+    if(!currentUser){
+        return <p>You must be logged in to leave a rant or rave.</p>
     }
 
     return (
