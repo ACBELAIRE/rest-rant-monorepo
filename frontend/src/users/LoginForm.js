@@ -16,27 +16,27 @@ function LoginForm() {
     const [errorMessage, setErrorMessage] = useState(null)
 
     async function handleSubmit(e) {
-        const response = await fetch(`http://localhost:5000/authentication/`, {
+        e.preventDefault()
+        console.log('credentials', credentials)
+        const response = await fetch(`http://localhost:5001/authentication/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(credentials)
         })
-    
+        console.log(response)
         const data = await response.json()
-    
+
         if (response.status === 200) {
             setCurrentUser(data.user)
+            console.log(data.token)
+            localStorage.setItem('token', data.token) // save the JWT in localStorage
             history.push(`/`)
         } else {
             setErrorMessage(data.message)
         }
     }
-      
-    
-  
-
 
     return (
         <main>
